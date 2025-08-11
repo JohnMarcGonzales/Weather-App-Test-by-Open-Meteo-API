@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Weather Project using Open‑Meteo</title>
+		<meta name="description" content="Simple, responsive weather app using Open‑Meteo Data with dark/light mode and red theme." />
+		<link rel="stylesheet" href="styles.css" />
+	</head>
+	<body class="wx-bg wx-clear">
+		<header class="app-header">
+			<div class="brand">
+				<span class="logo" aria-hidden="true">☀️</span>
+				<h1>Weather Test by John Marc Gonzales</h1>
+			</div>
+			<div class="header-controls">
+				<div class="unit-toggle" role="group" aria-label="Temperature unit">
+					<button id="unitC" type="button" class="pill active" aria-pressed="true">°C</button>
+					<button id="unitF" type="button" class="pill" aria-pressed="false">°F</button>
+				</div>
+				<button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark/light mode">
+					<span class="toggle-icon" aria-hidden="true">🌙</span>
+					<span class="toggle-text">Dark</span>
+				</button>
+			</div>
+		</header>
+
+		<main class="container">
+			<div id="loading" class="loading hidden" aria-live="polite" aria-busy="true">
+				<div class="clouds" aria-hidden="true">
+					<span>☁️</span><span>☁️</span><span>☁️</span>
+				</div>
+				<div class="loading-text">Loading weather…</div>
+			</div>
+			<section class="search-section">
+				<form id="searchForm" class="search">
+					<input
+						id="cityInput"
+						class="input"
+						type="search"
+						name="q"
+						placeholder="Search city (e.g., Manila, Tokyo, New York)"
+						autocomplete="off"
+						aria-label="Search city"
+						required
+					/>
+					<button class="btn" type="submit">Search</button>
+				</form>
+				<ul id="results" class="results" role="listbox" aria-label="Suggested locations"></ul>
+				<p id="status" class="status" role="status" aria-live="polite"></p>
+			</section>
+
+			<section id="weather" class="weather hidden" aria-live="polite">
+				<div class="current card">
+					<div class="current-main">
+						<div class="current-left">
+							<div class="current-icon" id="currentIcon" aria-hidden="true">⛅️</div>
+							<div>
+								<div class="location" id="location">—</div>
+								<div class="condition" id="condition">—</div>
+								<div class="updated" id="updated">—</div>
+							</div>
+						</div>
+						<div class="current-right">
+							<div class="temp" id="temp">—</div>
+							<div class="meta"><span id="humidity">—</span> humidity</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="errorBox" class="error card hidden" role="alert"></div>
+
+				<div class="forecast card">
+					<h2>5‑Day Forecast</h2>
+					<div id="forecastGrid" class="forecast-grid"></div>
+				</div>
+			</section>
+		</main>
+
+			<footer class="app-footer">
+				<small>Data by <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open‑Meteo</a>. No API key required.</small>
+				<div class="trademark">John Marc Gonzales ™</div>
+				<div class="note">Testing a weather app Project! (cause why not everybody starts somewhere)  :)</div>
+			</footer>
+
+			<noscript>
+				Please enable JavaScript to use this app.
+			</noscript>
+
+			<script src="script.js" defer></script>
+		</body>
+		</html>
