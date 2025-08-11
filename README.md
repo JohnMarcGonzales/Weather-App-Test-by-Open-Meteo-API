@@ -2,6 +2,8 @@
 
 Hi! I’m John Marc Gonzales, a fresh grad in IT. This is a tiny weather app I built to practice real-world web dev stuff: API calls, async/await, DOM updates, clean UI, and dark/light themes. No frameworks, no build tools—just HTML/CSS/JS and the excellent Open‑Meteo API (no API key needed).
 
+LinkedIn - https://www.linkedin.com/in/jmgonzales2203/
+
 ## What it does
 - Search any city and get its weather
 - Auto-detect your location via the browser (with fallback)
