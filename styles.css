@@ -63,6 +63,11 @@ body {
 
 .header-controls { display: flex; align-items: center; gap: 10px; }
 
+/* Refresh button (subtle) */
+.ghost-btn { appearance: none; border: 1px solid var(--border); background: var(--card); color: var(--text);
+  padding: 8px 12px; border-radius: 999px; cursor: pointer; font-weight: 600; }
+.ghost-btn:hover { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, var(--card)); }
+
 .theme-toggle {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border);

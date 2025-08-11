@@ -11,6 +11,7 @@ const els = {
   toggle: document.getElementById('themeToggle'),
   toggleIcon: document.querySelector('#themeToggle .toggle-icon'),
   toggleText: document.querySelector('#themeToggle .toggle-text'),
+  refreshBtn: document.getElementById('refreshBtn'),
   form: document.getElementById('searchForm'),
   input: document.getElementById('cityInput'),
   results: document.getElementById('results'),
@@ -67,7 +68,9 @@ async function searchPlaces(q, { count = 5 } = {}) {
   url.searchParams.set('count', String(count));
   url.searchParams.set('language', 'en');
   url.searchParams.set('format', 'json');
-  const res = await fetch(url);
+  // Cache-bust to avoid CDN/browser caching stale results
+  url.searchParams.set('_', Date.now().toString());
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error('Geocoding failed');
   const data = await res.json();
   return data?.results || [];
@@ -118,7 +121,9 @@ async function fetchWeather(lat, lon, timezone) {
   url.searchParams.set('hourly', 'relative_humidity_2m');
   url.searchParams.set('daily', 'weathercode,temperature_2m_max,temperature_2m_min');
   url.searchParams.set('timezone', timezone || 'auto');
-  const res = await fetch(url);
+  // Ensure fresh data by cache-busting
+  url.searchParams.set('_', Date.now().toString());
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error('Forecast failed');
   return res.json();
 }
@@ -224,6 +229,25 @@ async function handleSelect(place) {
   finally { els.loading.classList.add('hidden'); }
 }
 
+// Real-time refresh helpers
+async function refreshNow() {
+  if (!currentPlace) {
+    // If nothing selected yet, load default (geo/Manila)
+    await loadDefault();
+    return;
+  }
+  els.status.textContent = 'Refreshing…';
+  try {
+    const data = await fetchWeather(currentPlace.latitude, currentPlace.longitude, currentPlace.timezone);
+    currentData = data;
+    renderCurrent(currentPlace, currentData);
+    renderForecast(currentData);
+    els.status.textContent = '';
+  } catch (e) {
+    els.status.textContent = 'Refresh failed. Will try again later.';
+  }
+}
+
 // Wire up search
 const onType = debounce(async () => {
   const q = els.input.value.trim();
@@ -270,6 +294,13 @@ els.form.addEventListener('submit', async (e) => {
 // Theme toggle
 els.toggle.addEventListener('click', toggleTheme);
 
+// Manual refresh button
+if (els.refreshBtn) {
+  els.refreshBtn.addEventListener('click', () => {
+    refreshNow();
+  });
+}
+
 // Unit toggle
 function applyUnitUI() {
   const isC = unit === 'C';
@@ -310,7 +341,8 @@ async function loadDefault() {
     url.searchParams.set('longitude', String(longitude));
     url.searchParams.set('language', 'en');
     url.searchParams.set('format', 'json');
-    const res = await fetch(url);
+    url.searchParams.set('_', Date.now().toString());
+  const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error('Reverse geocoding failed');
     const data = await res.json();
     const place = data?.results?.[0] || { name: 'Your Location', latitude, longitude, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone };
@@ -328,3 +360,16 @@ async function loadDefault() {
 initTheme();
 applyUnitUI();
 loadDefault();
+
+// Auto-refresh when user returns to the tab (fresh at the moment of view)
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    refreshNow();
+  }
+});
+
+// Optional: periodic refresh every 5 minutes to keep data fresh if tab stays open
+const AUTO_REFRESH_MS = 5 * 60 * 1000;
+setInterval(() => {
+  refreshNow();
+}, AUTO_REFRESH_MS);
