@@ -15,9 +15,11 @@ Hi! I’m John Marc Gonzales, a fresh grad in IT. This is a tiny weather app I b
 - Loading clouds and friendly error states
 
 ## Quick start
-Option 1: Open `index.html` directly in a browser.
+Option 1: Download the files and open `index.html` directly in a browser.
 
-Option 2: run a local server (helps geolocation work reliably):
+Option 2: Open 'https://johnmarcgonzales.github.io/Weather-App-Test-by-Open-Meteo-API/' directly in a browser.
+
+Option 3: run a local server (helps geolocation work reliably):
 
 ```powershell
 # from the folder above Weather-App-Test-by-Open-Meteo-API
